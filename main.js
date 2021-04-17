@@ -8,12 +8,12 @@ class Main {
         BAEngine.Engine.Play();
         window.BAEngine.Game = new Game();
 
-        setInterval(function() {
+        /*setInterval(function() {
             var pb = new Pinball();
             pb.XVelocity = (Math.random() * 1) - (Math.random() * 2);
             pb.YVelocity = (Math.random() * 1) - (Math.random() * 2);
             BAEngine.Engine.Layers.push(pb);
-        }, 1000);
+        }, 1000);*/
 
 
 

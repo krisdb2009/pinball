@@ -7,8 +7,7 @@ export class Pinball extends GravityItem {
         this.Width = 15;
         this.Height = 15;
     }
-    Draw() {
-        var ctx = BAEngine.Engine.Context;
-        ctx.drawImage(this.Image, this.X, this.Y);
+    DrawRelative() {
+        this.drawImage(this.Image, 0, 0, 15, 15);
     }
 }

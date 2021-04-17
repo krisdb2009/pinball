@@ -1,24 +1,49 @@
 import { Item } from './item.js';
 import { GravityItem } from './gravityitem.js';
 export class DevStats extends Item {
-    constructor() {
+    constructor(TransX, TransY) {
         super();
         this.Font = '12px monospace';
         this.BackgroundColor = 'red';
         this.ForgroundColor = 'black';
-        this.X = 650;
-        this.Y = 0;
-        this.Width = 150;
-        this.Height = 50;
+        this.Transform = {
+            Rotation: 0,
+            Origin: {
+                X: 75,
+                Y: 25
+            },
+            Translate: {
+                X: TransX,
+                Y: TransY
+            },
+            Skew: {
+                X: 0,
+                Y: 0
+            },
+            Scale: {
+                X: 1,
+                Y: 2
+            }
+        }
     }
-    Draw() {
+    DrawRelative() {
         var ctx = BAEngine.Engine.Context;
+
+
         ctx.font = this.Font;
         ctx.fillStyle = this.BackgroundColor;
-        ctx.fillRect(this.X, this.Y, this.Width, this.Height);
+        this.fillRect(0, 0, 150, 50);
         ctx.fillStyle = this.ForgroundColor;
-        ctx.fillText('BAEngine: Pinball', this.X + 5, this.Y + 15);
-        ctx.fillText('FPS: ' + BAEngine.Engine.FrameRate, this.X + 5, this.Y + 30);
-        ctx.fillText('TPS: ' + BAEngine.Engine.PhysicsRate, this.X + 5, this.Y + 45);
+        this.fillText('BAEngine: Pinball', 5, 10);
+        this.fillText('FPS: ' + BAEngine.Engine.FrameRate, 5, 20);
+        this.fillText('TPS: ' + BAEngine.Engine.TickRate, 5, 30);
+
+
+
+        
+
+    }
+    Tick() {
+        this.Transform.Rotation += 0.001;
     }
 }

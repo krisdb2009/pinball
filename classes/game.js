@@ -8,7 +8,7 @@ export class Game {
         BAEngine.Engine.Layers.push(
             new Background(),
             new Pinball(),
-            new DevStats()
+            new DevStats(500,100)
         );
         console.log('Game: Done initializing layers.');
     }

@@ -1,58 +1,58 @@
 export class Engine {
     constructor(CanvasContext) {
         this.FrameTime = 0;
-        this.PhysicsTime = 0;
         this.PhysicsPerformance = 0;
-        this.FramePerformance = 0;
+        this.TimeSinceLastFrameMS = 0;
         this.FrameRate = 0;
-        this.PhysicsRate = 0;
+        this.TickRate = 0;
         this.PhysicsTargetRateMS = 3;
         this.Speed = 0.5;
         this.PhysicsPerFrame = 0;
         this.Context = CanvasContext;
         this.Layers = new Array();
-        this.PhysicsQueue = new Array();
+        this.TickQueue = new Array();
+        this.FramesPassed = 0;
+        this.TicksPassed = 0;
         this.Initialize();
     }
     Initialize() {
         console.log('Engine: Starting physics...');
         console.log('Engine: Initializing...');
         setInterval(function() {
-            BAEngine.Engine.FrameRate = Math.round(1000 / BAEngine.Engine.FramePerformance);
-        }, 100);
+            BAEngine.Engine.FrameRate = BAEngine.Engine.FramesPassed;
+            BAEngine.Engine.FramesPassed = 0;
+        }, 1000);
         setInterval(function() {
-            BAEngine.Engine.PhysicsRate = Math.round(1000 / BAEngine.Engine.PhysicsPerformance);
-        }, 100);
+            BAEngine.Engine.TickRate = BAEngine.Engine.TicksPassed;
+            BAEngine.Engine.TicksPassed = 0;
+        }, 1000);
     }
     Play() {
         console.log('Engine: Playing.');
         this.DrawFrame();
-        this.CalculatePhysics();
     }
     Pause() {
         console.log('Engine: Paused.');
     }
     DrawFrame() {
         var now = performance.now();
-        BAEngine.Engine.FramePerformance = now - BAEngine.Engine.FrameTime;
+        BAEngine.Engine.TimeSinceLastFrameMS = now - BAEngine.Engine.FrameTime;
         BAEngine.Engine.FrameTime = now;
         BAEngine.Engine.Layers.forEach(function(item) {
             item.Draw();
         });
-        BAEngine.Engine.PhysicsPerFrame += BAEngine.Engine.FramePerformance;
+        BAEngine.Engine.PhysicsPerFrame += BAEngine.Engine.TimeSinceLastFrameMS;
         while(BAEngine.Engine.PhysicsPerFrame >= BAEngine.Engine.PhysicsTargetRateMS) {
             BAEngine.Engine.PhysicsPerFrame -= BAEngine.Engine.PhysicsTargetRateMS;
-            BAEngine.Engine.CalculatePhysics();
+            BAEngine.Engine.Tick();
         }
         requestAnimationFrame(BAEngine.Engine.DrawFrame);
+        BAEngine.Engine.FramesPassed++;
     }
-    CalculatePhysics() {
-        var now = performance.now();
-        BAEngine.Engine.PhysicsPerformance = now - BAEngine.Engine.PhysicsTime;
-        BAEngine.Engine.PhysicsTime = now;
-        BAEngine.Engine.PhysicsQueue.forEach(function(item) {
-            item.CalculatePhysics();
+    Tick() {
+        BAEngine.Engine.TickQueue.forEach(function(item) {
+            item.Tick();
         });
-        //setTimeout(BAEngine.Engine.CalculatePhysics, 1 - (Date.now() - now));
+        BAEngine.Engine.TicksPassed++;
     }
 }
